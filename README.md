@@ -1,6 +1,7 @@
 # Backend for Cards
 
 - host on railway.app
+- (test api)[https://wdr-flashcards-server-production.up.railway.app/decks]
 
 ## Knowledge
 
