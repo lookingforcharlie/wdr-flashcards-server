@@ -1,5 +1,7 @@
 # Backend for Cards
 
+- host on railway.app
+
 ## Knowledge
 
 - npm init -f [to create package.json file]
@@ -25,3 +27,6 @@
 
 - why splice doesn't work in the client side, but slice works? [Location: Deck.tsx, handleDeleteCard function]
 - why splice works in the server side, slice doesn't work? [Location: cardControllers.ts, deleteCardForDeckController function]
+
+- "build": "tsc",
+- "start": "node build/index.js"
