@@ -3,6 +3,8 @@
 import { config } from 'dotenv';
 config();
 
+import Deck from './models/Deck';
+
 // const express = require('express');
 import express from 'express';
 // bring in a tool or library allows us easily connect to mongoDB database cluster
@@ -26,6 +28,8 @@ const PORT = process.env.PORT || 5555;
 app.use(
   cors({
     origin: '*',
+    // Production version of 'origin': only allow a site hosted on this origin access the API
+    // origin: 'https://wdr-flashcards-server-production.up.railway.app',
   })
 );
 
@@ -55,6 +59,25 @@ app.post('/decks/:deckId/cards', createCardForDeckController);
 app.get('/decks/:deckId/cards', getOneDeckController);
 
 app.delete('/decks/:deckId/cards/:cardIndex', deleteCardForDeckController);
+
+// Endpoint for modification of the title
+app.put('/decks/:deckId', async (req, res) => {
+  try {
+    const deckId = req.params.deckId;
+
+    const deckForChange = await Deck.findById(deckId);
+    if (deckForChange === null) return;
+    deckForChange.title = req.body.title;
+    await deckForChange.save();
+    // find the whole decks
+    const decks = await Deck.find();
+    // send the whole decks back to user
+    res.json(decks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // mongoose.connect is a promise that running asynchronous code
 //"!" symbol which is a feature in Typescript known as the definite assignment assertion.

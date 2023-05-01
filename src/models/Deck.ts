@@ -8,6 +8,7 @@ const DeckSchema = new Schema({
   cards: [String],
 });
 
+// 'Deck' is the name of this DeckModel?
 const DeckModel = mongoose.model('Deck', DeckSchema);
 
 export default DeckModel;
