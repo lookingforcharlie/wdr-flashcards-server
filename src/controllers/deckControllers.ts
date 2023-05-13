@@ -6,7 +6,7 @@ export async function getDecksController(req: Request, res: Response) {
   // fetch all decks and send to the user
   // 1. fetch the data from mongo
   const decks = await Deck.find();
-  console.log(decks);
+  console.log('Retrieved decks in MongoDB:', decks);
   // 2. send back the array to the ui
   res.json(decks);
 }
@@ -22,6 +22,9 @@ export async function createDecksController(req: Request, res: Response) {
   // save newDeck into DB
   // save() is a promise
   const createdDeck = await newDeck.save();
+
+  console.log('Just created a deck with _id:', createdDeck._id);
+
   res.json(createdDeck);
 }
 
@@ -33,6 +36,7 @@ export async function deleteDecksController(req: Request, res: Response) {
   // 2. Delete the deck from mongo
   const deck = await Deck.findByIdAndDelete(deckId);
 
+  console.log('Deleted a deck');
   // 3. Return the deleted deck to the user who made the request
   res.json(deck);
 }

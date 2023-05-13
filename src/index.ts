@@ -27,9 +27,9 @@ const PORT = process.env.PORT || 5555;
 // We are running locally, express you can let any hostname hit us, it doesn't matter, let's install CORS.
 app.use(
   cors({
-    origin: '*',
+    // origin: '*',
     // Production version of 'origin': only allow a site hosted on this origin access the API
-    // origin: 'https://wdr-flashcards-server-production.up.railway.app',
+    origin: 'https://wdr-flashcards-server-production.up.railway.app',
   })
 );
 
@@ -75,6 +75,26 @@ app.put('/decks/:deckId', async (req, res) => {
     res.json(decks);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Creating an endpoint for modifying the card: not finished
+app.put('/decks/:deckId/cards/:cardId', async (req, res) => {
+  try {
+    const deckId = req.params.deckId;
+    const cardId = req.params.cardId;
+
+    console.log('deckId', deckId);
+    console.log('cardId', cardId);
+
+    const targetDeck = await Deck.findById(deckId);
+
+    // targetDeck?.cards?
+
+    // res.json(targetDeck?.cards[0]._id);
+  } catch (Error) {
+    console.error(Error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
