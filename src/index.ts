@@ -29,7 +29,7 @@ app.use(
   cors({
     // origin: '*',
     // Production version of 'origin': only allow a site hosted on this origin access the API
-    origin: 'https://wdr-flashcards-server-production.up.railway.app',
+    origin: 'https://wdr-flashcards-client.vercel.app',
   })
 );
 
