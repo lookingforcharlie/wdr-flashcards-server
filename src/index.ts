@@ -27,9 +27,10 @@ const PORT = process.env.PORT || 5555;
 // We are running locally, express you can let any hostname hit us, it doesn't matter, let's install CORS.
 app.use(
   cors({
-    // origin: '*',
+    origin: '*',
     // Production version of 'origin': only allow a site hosted on this origin access the API
-    origin: 'https://wdr-flashcards-server-production.up.railway.app',
+    // origin: 'https://wdr-flashcards-server-production.up.railway.app',
+    // origin: 'https://wdr-flashcards-client.vercel.app/',
   })
 );
 
@@ -80,19 +81,31 @@ app.put('/decks/:deckId', async (req, res) => {
 });
 
 // Creating an endpoint for modifying the card: not finished
-app.put('/decks/:deckId/cards/:cardId', async (req, res) => {
+app.put('/decks/:deckId/cards/:cardIndex', async (req, res) => {
   try {
     const deckId = req.params.deckId;
-    const cardId = req.params.cardId;
+    const cardIndex = req.params.cardIndex;
 
     console.log('deckId', deckId);
-    console.log('cardId', cardId);
+    console.log('cardIndex', cardIndex);
+
+    const { textFront, textBack } = req.body;
 
     const targetDeck = await Deck.findById(deckId);
+    // cardIndex is string originally.
+    if (targetDeck === null) return;
+    targetDeck.cards[parseInt(cardIndex)].front = textFront;
+    targetDeck.cards[parseInt(cardIndex)].back = textBack;
 
-    // targetDeck?.cards?
+    await targetDeck.save();
 
-    // res.json(targetDeck?.cards[0]._id);
+    const deck = await Deck.findById(deckId);
+    if (deck === null) {
+      res.json({ message: 'deck not found' });
+      return;
+    }
+
+    res.json(deck.cards);
   } catch (Error) {
     console.error(Error);
     res.status(500).json({ message: 'Internal server error' });

@@ -1,28 +1,6 @@
 import { Request, Response } from 'express';
 import Deck from '../models/Deck';
 
-// Create One-sided Card for Deck in MongoDB
-export async function disabledcreateCardForDeckController(
-  req: Request,
-  res: Response
-) {
-  // retrieve the id from params of request
-  // if you have a route as /api/:name, then the "name" property is available as req.params.name
-  const deckId = req.params.deckId;
-  // find the deck by its id from MongoDB
-  const deck = await Deck.findById(deckId);
-  // get the card text content from request body by destructuring
-  const { text } = req.body;
-  // validation for typescript, error handling for the endpoint
-  if (!deck) return res.status(400).send('no deck of this id exits');
-  // push the card content into deck.cards array
-  deck.cards.push(text);
-  // save to MongoDB
-  await deck.save();
-  // send back the saved deck
-  res.json(deck);
-}
-
 // Create double-sided card in MongoDB
 export async function createCardForDeckController(req: Request, res: Response) {
   // retrieve the id from params of request
