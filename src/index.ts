@@ -6,7 +6,8 @@ config();
 import Deck from './models/Deck';
 
 // const express = require('express');
-import express from 'express';
+import express, { Request, Response } from 'express';
+
 // bring in a tool or library allows us easily connect to mongoDB database cluster
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -62,7 +63,7 @@ app.get('/decks/:deckId/cards', getOneDeckController);
 app.delete('/decks/:deckId/cards/:cardIndex', deleteCardForDeckController);
 
 // Endpoint for modification of the title
-app.put('/decks/:deckId', async (req, res) => {
+app.put('/decks/:deckId', async (req: Request, res: Response) => {
   try {
     const deckId = req.params.deckId;
 
@@ -81,36 +82,42 @@ app.put('/decks/:deckId', async (req, res) => {
 });
 
 // Creating an endpoint for modifying the card: not finished
-app.put('/decks/:deckId/cards/:cardIndex', async (req, res) => {
-  try {
-    const deckId = req.params.deckId;
-    const cardIndex = req.params.cardIndex;
+app.put(
+  '/decks/:deckId/cards/:cardIndex',
+  async (req: Request, res: Response) => {
+    try {
+      const deckId = req.params.deckId;
+      const cardIndex = req.params.cardIndex;
 
-    console.log('deckId', deckId);
-    console.log('cardIndex', cardIndex);
+      console.log('deckId', deckId);
+      console.log('cardIndex', cardIndex);
 
-    const { textFront, textBack } = req.body;
+      const { textFront, textBack } = req.body;
 
-    const targetDeck = await Deck.findById(deckId);
-    // cardIndex is string originally.
-    if (targetDeck === null) return;
-    targetDeck.cards[parseInt(cardIndex)].front = textFront;
-    targetDeck.cards[parseInt(cardIndex)].back = textBack;
+      const targetDeck = await Deck.findById(deckId);
+      // cardIndex is string originally.
+      if (targetDeck === null) return;
+      targetDeck.cards[parseInt(cardIndex)].front = textFront;
+      targetDeck.cards[parseInt(cardIndex)].back = textBack;
 
-    await targetDeck.save();
+      await targetDeck.save();
 
-    const deck = await Deck.findById(deckId);
-    if (deck === null) {
-      res.json({ message: 'deck not found' });
-      return;
+      const deck = await Deck.findById(deckId);
+      if (deck === null) {
+        res.json({ message: 'deck not found' });
+        return;
+      }
+
+      // On the backend, send the JSON format response from server to the client as the response body.
+      // On the frontend, when you receive a JSON format response, we need to use 'res.json()' to extract the JSON data from response body.
+      // 'res.json()' returns a promise that resolves to the JSON data received from the server, allows us consume the promise returned by 'res.json()'.
+      res.json(deck.cards);
+    } catch (Error) {
+      console.error(Error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-
-    res.json(deck.cards);
-  } catch (Error) {
-    console.error(Error);
-    res.status(500).json({ message: 'Internal server error' });
   }
-});
+);
 
 // mongoose.connect is a promise that running asynchronous code
 //"!" symbol which is a feature in Typescript known as the definite assignment assertion.

@@ -1,3 +1,4 @@
+// for typescript
 import { Request, Response } from 'express';
 import Deck from '../models/Deck';
 
@@ -6,7 +7,14 @@ export async function getDecksController(req: Request, res: Response) {
   // fetch all decks and send to the user
   // 1. fetch the data from mongo
   const decks = await Deck.find();
+
+  // You make conditional search as follow
+  // const decks = await Deck.find({
+  //   $where
+  // });
+
   console.log('Retrieved decks in MongoDB:', decks);
+
   // 2. send back the array to the ui
   res.json(decks);
 }
