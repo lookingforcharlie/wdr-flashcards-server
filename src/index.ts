@@ -35,6 +35,15 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    'https://wdr-flashcards-client.vercel.app'
+  );
+  // Add other CORS headers if needed
+  next();
+});
+
 // express.json() allows support for Json post request, we can't see console.log(req.body) without it
 // express.json() is a middleware function, app.use() telling express to use it.
 // anytime anyone makes a request to our api, it's going to run express.json()
