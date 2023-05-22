@@ -26,14 +26,16 @@ const app = express();
 const PORT = process.env.PORT || 5555;
 
 // We are running locally, express you can let any hostname hit us, it doesn't matter, let's install CORS.
-app.use(
-  cors({
-    origin: '*',
-    // Production version of 'origin': only allow a site hosted on this origin access the API
-    // origin: 'https://wdr-flashcards-server-production.up.railway.app',
-    // origin: 'https://wdr-flashcards-client.vercel.app/',
-  })
-);
+// app.use(
+//   cors({
+//     origin: '*',
+//     // Production version of 'origin': only allow a site hosted on this origin access the API
+//     // origin: 'https://wdr-flashcards-server-production.up.railway.app',
+//     // origin: 'https://wdr-flashcards-client.vercel.app/',
+//   })
+// );
+
+app.use(cors());
 
 // express.json() allows support for Json post request, we can't see console.log(req.body) without it
 // express.json() is a middleware function, app.use() telling express to use it.
